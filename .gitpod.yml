@@ -1,19 +1,27 @@
 image:
   file: .gitpod.Dockerfile
 
+tasks:
+  - name: Start Airflow
+    command: |
+      # 1. Prepare Airflow directory + config
+      mkdir -p ./airflow ./airflow/dags
+      touch ./airflow/airflow.cfg
+      ln -sf $PWD/dags/* ./airflow/dags/
+
+      # 2. Set environment variables
+      export AIRFLOW_HOME=$PWD/airflow
+      export AIRFLOW_CONFIG=$AIRFLOW_HOME/airflow.cfg
+      export AIRFLOW__CORE__DAGS_FOLDER=$PWD/dags
+      export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////$AIRFLOW_HOME/airflow.db
+      export AIRFLOW__API_AUTH__JWT_SECRET=my_super_secret_key
+
+      # 3. Add include/ to Python path if you're importing utils
+      export PYTHONPATH=$PYTHONPATH:$PWD
+
+      # 4. Start Airflow UI + scheduler
+      airflow standalone
+
 ports:
   - port: 8080
     onOpen: open-preview
-
-tasks:
-  - name: Start Airflow
-    init: |
-      export AIRFLOW_HOME=/workspace/airflow
-      mkdir -p $AIRFLOW_HOME
-      mkdir -p $AIRFLOW_HOME/dags
-      ln -s /workspace/e3-airflow-for-geospatial-intro/dags $AIRFLOW_HOME/dags
-      airflow db migrate
-    command: |
-      airflow api-server -p 8080 &
-      sleep 5
-      airflow scheduler
