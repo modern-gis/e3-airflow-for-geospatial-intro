@@ -12,6 +12,7 @@ RUN apt-get update \
       gdal-bin \
       libgdal-dev \
       libsqlite3-dev \
+      ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
 # 3) Copy & install your Python requirements
