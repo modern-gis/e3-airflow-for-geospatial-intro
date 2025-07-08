@@ -2,12 +2,13 @@ name: grade
 
 on:
   push:
-    paths:
-      - 'mini-shapefile-to-geoparquet/**'
+    branches:
+      - main
   pull_request:
-    paths:
-      - 'mini-shapefile-to-geoparquet/**'
-
+    branches:
+      - main
+  workflow_dispatch:
+  
 jobs:
   test:
     runs-on: ubuntu-latest
