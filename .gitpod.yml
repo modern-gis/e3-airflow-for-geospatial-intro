@@ -6,10 +6,12 @@ ports:
     onOpen: open-preview
 
 tasks:
-  - name: Start Airflow 3
+  - name: Start Airflow
     init: |
       export AIRFLOW_HOME=/workspace/airflow
       mkdir -p $AIRFLOW_HOME
+      mkdir -p $AIRFLOW_HOME/dags
+      ln -s /workspace/e3-airflow-for-geospatial-intro/dags $AIRFLOW_HOME/dags
       airflow db migrate
     command: |
       airflow api-server -p 8080 &
