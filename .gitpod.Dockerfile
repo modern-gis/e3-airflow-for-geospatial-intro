@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-# Install system dependencies for Airflow and geospatial stack
+# Install system packages
 USER root
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -11,19 +11,18 @@ RUN apt-get update && apt-get install -y \
     git \
     && apt-get clean
 
-# Set environment variables for geospatial libraries
+# Env vars for GDAL-based installs
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
 ENV C_INCLUDE_PATH=/usr/include/gdal
 ENV AIRFLOW_HOME=/workspace/airflow
 
-# Create a non-root user called airflow
+# Create a non-root airflow user
 RUN useradd -m airflow
 USER airflow
 WORKDIR /home/airflow
 
-# Install Python packages as non-root
+# Install Python packages
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Set working directory
 WORKDIR /workspace

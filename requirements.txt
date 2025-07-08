@@ -1,5 +1,7 @@
-apache-airflow==3.0.1
-boto3
+# Airflow core + Amazon support
+apache-airflow[postgres]==3.0.1
+
+# Geospatial libraries
 geopandas
 shapely
 fiona
