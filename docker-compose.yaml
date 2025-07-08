@@ -1,0 +1,44 @@
+version: '3'
+
+# 🧠 TODO 1:
+# This section defines common settings for all Airflow services.
+# What does this "x-" prefix mean in YAML, and how is it reused below?
+x-airflow-common:
+  &airflow-common
+  build: .
+  environment:
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__FERNET_KEY: ""
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+  volumes:
+    - ./dags:/opt/airflow/dags
+  depends_on:
+    - postgres
+
+services:
+  # 🧠 TODO 2:
+  # This is the database that Airflow uses to store its state.
+  # What username/password is it using? Can you find them below?
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 5s
+      retries: 5
+
+  # ✅ Airflow web UI
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+
+  # ✅ Airflow scheduler (runs DAGs in the background)
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler

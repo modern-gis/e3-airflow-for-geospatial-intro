@@ -1,0 +1,6 @@
+geopandas
+pyproj
+fiona
+shapely
+requests
+pytest
