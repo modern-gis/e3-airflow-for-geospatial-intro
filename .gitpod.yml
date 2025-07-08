@@ -1,0 +1,12 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: Start Airflow
+    init: |
+      export AIRFLOW_HOME=/workspace/airflow
+      mkdir -p $AIRFLOW_HOME
+      airflow db init
+    command: |
+      airflow webserver &
+      airflow scheduler
