@@ -6,12 +6,12 @@ ports:
     onOpen: open-preview
 
 tasks:
-  - name: Start Airflow
+  - name: Start Airflow 3
     init: |
       export AIRFLOW_HOME=/workspace/airflow
       mkdir -p $AIRFLOW_HOME
       airflow db migrate
     command: |
-      airflow webserver -p 8080 &
+      airflow api-server -p 8080 &
       sleep 5
       airflow scheduler
