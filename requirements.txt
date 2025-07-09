@@ -10,3 +10,4 @@ requests
 pmtiles
 pytest
 pyarrow
+geopandas[pyarrow]
