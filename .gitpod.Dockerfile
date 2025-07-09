@@ -14,6 +14,7 @@ RUN apt-get update \
       libsqlite3-dev \
       ca-certificates \
  && rm -rf /var/lib/apt/lists/*
+ 
 
 # 3) Copy & install your Python requirements
 COPY requirements.txt /tmp/requirements.txt
