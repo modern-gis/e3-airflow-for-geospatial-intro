@@ -37,6 +37,8 @@ def convert_to_geoparquet():
     }
     with open(os.path.join(DATA_DIR, "metadata.json"), "w") as f:
         json.dump(metadata, f, indent=2)
+    with open(os.path.join("metadata.json"), "w") as f:
+        json.dump(metadata, f, indent=2)
 
 with DAG(
     dag_id="shapefile_to_geoparquet",

@@ -1,0 +1,6 @@
+{
+  "parquet_path": "/tmp/data/us_states.parquet",
+  "geometry_column": "geometry",
+  "crs": "EPSG:4326",
+  "num_rows": 51
+}
