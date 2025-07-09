@@ -7,7 +7,14 @@ import os
 import json
 
 DATA_DIR = "/tmp/data"
-SHAPEFILE_URL = "https://www2.census.gov/geo/tiger/GENZ2022/shp/cb_2022_us_state_20m.zip"
+SHAPEFILE_URL = "https://eric.clst.org/assets/wiki/uploads/Stuff/gz_2010_us_050_00_20m.zip"
+
+def find_shapefile(base_dir: str) -> str:
+    for root, dirs, files in os.walk(base_dir):
+        for file in files:
+            if file.endswith(".shp") and not file.startswith("._"):
+                return os.path.join(root, file)
+    raise FileNotFoundError("No valid .shp file found in extracted folder.")
 
 def download_shapefile():
     os.makedirs(DATA_DIR, exist_ok=True)
@@ -16,10 +23,8 @@ def download_shapefile():
     z.extractall(DATA_DIR)
 
 def convert_to_geoparquet():
-    shp_files = [f for f in os.listdir(DATA_DIR) if f.endswith(".shp")]
-    if not shp_files:
-        raise ValueError("No shapefile found.")
-    gdf = gpd.read_file(os.path.join(DATA_DIR, shp_files[0]))
+    shapefile_path = find_shapefile("/tmp/data")
+    gdf = gpd.read_file(shapefile_path)
     output_path = os.path.join(DATA_DIR, "us_states.parquet")
     gdf.to_parquet(output_path)
 
@@ -36,7 +41,7 @@ def convert_to_geoparquet():
 with DAG(
     dag_id="shapefile_to_geoparquet",
     start_date=datetime(2024, 1, 1),
-    schedule_interval="@once",
+    schedule="@once",
     catchup=False,
     tags=["geospatial", "starter"],
 ) as dag:

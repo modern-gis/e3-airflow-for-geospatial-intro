@@ -9,3 +9,4 @@ pyproj
 requests
 pmtiles
 pytest
+pyarrow
